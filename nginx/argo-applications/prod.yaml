@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: nginx-prod
-  namespace: nginx-prod
+  namespace: argocd
 spec:
   project: default
   source:
@@ -14,7 +14,7 @@ spec:
         - ../envs/prod.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: nginx-dev
+    namespace: nginx-prod
   syncPolicy:
     automated: {}
     syncOptions:
