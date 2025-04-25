@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: nginx-prod
+  name: artemis-dev
   namespace: argocd
 spec:
   project: default
@@ -11,10 +11,10 @@ spec:
     targetRevision: HEAD
     helm:
       valueFiles:
-        - ../nginx/envs/prod.yaml
+        - ../artemis/envs/dev.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: nginx-prod
+    namespace: artemis-dev
   syncPolicy:
     automated: {}
     syncOptions:
