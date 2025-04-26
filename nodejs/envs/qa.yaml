@@ -1,22 +1,27 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: nodejs-qa
-  namespace: argocd
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/jadomar93/jad-argo.git
-    path: application
-    targetRevision: HEAD
-    helm:
-      valueFiles:
-        - ../nodejs/envs/qa.yaml
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: nodejs-qa
-  syncPolicy:
-    automated: {}
-    syncOptions:
-      - CreateNamespace=true
-      
+replicaCount: 5
+
+image:
+  repository: us-central1-docker.pkg.dev/terraform-project-jad/nodejs/nodejs
+  tag: "2.0.0"
+
+service:
+  port: 8080
+
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: 
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    ingress.kubernetes.io/ssl-redirect: "false"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    acme.cert-manager.io/http01-edit-in-place: "true"
+  hosts:
+    - host: nodejs-qa.jadomars.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: 
+   - secretName: nodejs-qa-tls
+     hosts:
+       - nodejs-qa.jadomars.com
